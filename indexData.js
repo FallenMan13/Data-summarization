@@ -28,13 +28,14 @@ module.exports.indexData = function indexData(data){
   }
   index("Please enter the uri you would like to index to, " + config["base_uri"] /*Default uri to speed up uri input i.e. the user need only input the index and type*/, function(answer){ // Function to index the summarized data
     for(var i = 0; i < data.length; i++){ // For loop to index the data individually i.e. each entry in the array will be indexed on its own to allow for easier viewing in kibana
+      console.log("Preparing to index data");
       config.defaultRequest.uri = config["base_uri"] + answer;
       config.defaultRequest.body = JSON.stringify(({"@timestamp" : created.createdOn(), "summary" : data[i]}), null, 2)
       request(config.defaultRequest, function(error, response){
         if(error){
           console.log(error);
         }
-        else if(response.statusCode === 404){ // If the response code from the index operation is 404 Not Found
+        else{
           console.log(JSON.stringify(response, null, 2)); // Stringify the response and log it to the console
         }
       });
