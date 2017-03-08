@@ -6,6 +6,7 @@ To configure this script to better suit your needs, open the "config.js" file in
 
 # Command-line / terminal instructions
 
-0. run: ```git clone https://github.com/FallenMan13/Data-summarization.git```
-0. run: ```cd Data-summarization```
-0. run: ```node JmeterDataSummary```
+0. ```git clone https://github.com/FallenMan13/Data-summarization.git```
+0. ```cd Data-summarization```
+0. ```npm install```
+0. ```node JmeterDataSummary```
