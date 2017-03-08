@@ -1,0 +1,23 @@
+{
+  "name": "datasummarization",
+  "version": "1.0.0",
+  "description": "Extract, summarize and index data",
+  "main": "JmeterDataSummary.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FallenMan13/Data-summarization.git"
+  },
+  "author": "FallenMan13",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FallenMan13/Data-summarization/issues"
+  },
+  "homepage": "https://github.com/FallenMan13/Data-summarization#readme",
+  "dependencies": {
+    "readline": "^1.3.0",
+    "request": "^2.80.0"
+  }
+}
