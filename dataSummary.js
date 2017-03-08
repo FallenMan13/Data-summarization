@@ -44,7 +44,7 @@ module.exports.summarizeData = function summarizeData(initArr, sumArr){ // Funct
   count = 0; // Set count back to 0 for second while loop
   while(count < sumArr.length){ // While loop to ensure that no duplicate data has been created by the previous loop
     for(var i = 0, j = 1, l = 0; i < sumArr.length, j < sumArr.length; j++){
-      if(j === i){} // Empty if to prevent matching and splicing on the same position in the array
+      if(j === i){}
       else if(sumArr[i]["label"] === sumArr[j]["label"]){ // If the label of the static array pointer is exactly equal to that of the moving array pointer
         console.log("Match found at position " + j)
         fixSummaryArr(sumArr, i, j); // Run the function to fix the data at the statc pointer and remove the duplicate instance at the moving pointer

@@ -1,5 +1,5 @@
 module.exports = {
-  "base_index_uri" : "http://10.156.24.35:5601/elasticsearch/",
+  "base_uri" : "http://10.156.24.35:5601/elasticsearch/",
   "defaultRequest" : {
     method : "POST",
     uri : "",

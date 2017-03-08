@@ -10,7 +10,7 @@ module.exports.indexData = function indexData(data){
   })
   function index(questionText, callback){ // Function to allow the user to input the desired uri to index the data to
     function analyzeAnswer(answer){
-      rlindexuri.question("Is this uri correct? " + config["base_index_uri"] + answer + " ", function(confirm){
+      rlindexuri.question("Is this uri correct? " + config["base_uri"] + answer + " ", function(confirm){
         if(confirm.toLowerCase().startsWith("y")){
           rlindexuri.close();
           callback(answer); // Begin indexing the data to the specified uri
@@ -26,10 +26,9 @@ module.exports.indexData = function indexData(data){
     }
   rlindexuri.question(questionText, analyzeAnswer);
   }
-  index("Please enter the uri you would like to index to, " + config["base_index_uri"] /*Default uri to speed up uri input i.e. the user need only input the index and type*/, function(answer){ // Function to index the summarized data
+  index("Please enter the uri you would like to index to, " + config["base_uri"] /*Default uri to speed up uri input i.e. the user need only input the index and type*/, function(answer){ // Function to index the summarized data
     for(var i = 0; i < data.length; i++){ // For loop to index the data individually i.e. each entry in the array will be indexed on its own to allow for easier viewing in kibana
-      console.log("Preparing to index the data");
-      config.defaultRequest.uri = config["base_index_uri"] + answer;
+      config.defaultRequest.uri = config["base_uri"] + answer;
       config.defaultRequest.body = JSON.stringify(({"@timestamp" : created.createdOn(), "summary" : data[i]}), null, 2)
       request(config.defaultRequest, function(error, response){
         if(error){
