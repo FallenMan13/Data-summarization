@@ -35,7 +35,7 @@ module.exports.indexData = function indexData(data){
         if(error){
           console.log(error);
         }
-        else{
+        else if(response.statusCode >= 400){
           console.log(JSON.stringify(response, null, 2)); // Stringify the response and log it to the console
         }
       });
