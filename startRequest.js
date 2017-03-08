@@ -1,5 +1,6 @@
 // Required modules
 const read  = require("readline");
+const program = require("commander");
 const page = require("./getPage");
 const rlinterface = read.createInterface({ // Interface to allow the user to either use the default dates, or enter their own
   input: process.stdin,
@@ -7,12 +8,25 @@ const rlinterface = read.createInterface({ // Interface to allow the user to eit
 });
 module.exports.beginRequest = function beginRequest(JSONrequest){ // Function to allow the user to decide to use the default dates or enter their own
   var JSONtimerange = JSONrequest.query.bool.must[1].range["@timestamp"];
-  if(process.argv[3] != undefined && process.argv[5] != undefined){
-    JSONtimerange.gte = Date.parse(process.argv[3]);
-    JSONtimerange.lte = Date.parse(process.argv[5]);
-    page.getPage(undefined, JSONrequest);
+  if(process.argv.length > 2){
+    program
+      .version('0.0.1')
+      .option('-f, --from [date]', 'Start from entered date')
+      .option('-t, --to [date]', 'End at entered date')
+      .option('-i, --index [uri]', 'Index at specified uri')
+      .parse(process.argv);
+
+      console.log("You selected the date range of: ");
+      if(program.from) console.log("From " + program.from);
+      if(program.to) console.log("To " + program.to);
+      console.log("with an index uri of: ");
+      if(program.index) console.log("Uri: " + program.index);
+      JSONtimerange.gte = Date.parse(program.from);
+      JSONtimerange.lte = Date.parse(program.to);
+      page.getPage(undefined, JSONrequest);
   }
   else{
+    console.log("There are commandline parameters that can be entered alongside the node operation. They can be entered like this: node [filename] --from [date] --to [date] --index [uri] or node [filename] -f [date] -t [date] -i [uri]")
     var date = new Date();
     // Automatic creation of default dates
     var currDate = date.getFullYear() + "-" + ('0' + String(date.getMonth()+1)).substr(-2) + "-" + ('0' + String(date.getDate())).substr(-2) + "T";
