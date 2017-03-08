@@ -1,40 +1,61 @@
 // Required modules
 const read  = require("readline");
+const program = require("commander");
 const page = require("./getPage");
 const rlinterface = read.createInterface({ // Interface to allow the user to either use the default dates, or enter their own
   input: process.stdin,
   output: process.stdout
 });
 module.exports.beginRequest = function beginRequest(JSONrequest){ // Function to allow the user to decide to use the default dates or enter their own
-  var date = new Date();
   var JSONtimerange = JSONrequest.query.bool.must[1].range["@timestamp"];
-  // Automatic creation of default dates
-  var currDate = date.getFullYear() + "-" + ('0' + String(date.getMonth()+1)).substr(-2) + "-" + ('0' + String(date.getDate())).substr(-2) + "T";
-  var midNight = currDate + "00:00:00.000Z"; // Append the current date with midnight as the time
-  var morning1 = currDate + "01:00:00.000Z"; // Append the current date with 1 in the morning as the time
-  function defaults(questionText, callback){ // Function to confirm if the default dates should be used
-    function analyzeAnswer(answer){
-      if(answer.toLowerCase().startsWith("y")){ // If the response entered begins with a 'y' when converted to lowercase
-        rlinterface.close();
-        callback(answer); // Parses the default dates into the JSON body and sends it to the "getpage" module
-      }
-      else if(answer.toLowerCase().startsWith("n")){ // If the response entered begins with an 'n' when converted to lowercase
-        dateRange(JSONrequest); // Passes the JSON body to the dateRange function for the user to input the dates to be used
-      }
-      else{
-        console.log("Unsure what you mean by " + answer + " please try again"); // Default response to input which doesn't match expected values
-        rlinterface.question(questionText, analyzeAnswer); // Retry the question
-      }
-    }
-    rlinterface.question(questionText, analyzeAnswer);
+  if(process.argv.length > 2){
+    program
+      .version('0.0.1')
+      .option('-f, --from [date]', 'Start from entered date')
+      .option('-t, --to [date]', 'End at entered date')
+      .option('-i, --index [uri]', 'Index at specified uri')
+      .parse(process.argv);
+
+      console.log("You selected the date range of: ");
+      if(program.from) console.log("From " + program.from);
+      if(program.to) console.log("To " + program.to);
+      console.log("with an index uri of: ");
+      if(program.index) console.log("Uri: " + program.index);
+      JSONtimerange.gte = Date.parse(program.from);
+      JSONtimerange.lte = Date.parse(program.to);
+      page.getPage(undefined, JSONrequest);
   }
-  defaults("Would you like to use the default dates: " + midNight + " to " + morning1 + "? ", function(answer){ // Function to parse the defailt dates into the JSON body
-    rlinterface.close();
-    JSONtimerange.gte = Date.parse(midNight); // Parse the first default date into epoch milliseconds and store in the JSON body
-    JSONtimerange.lte = Date.parse(morning1); // Parse the second default date into epoch milliseconds and store in the JSON body
-    page.getPage(undefined, JSONrequest); // Send the altered JSON body to the "getPage" module (note: the first parameter is set to undefined to ensure that the JSON body is not mistaken
-    // for the scroll id that will be provided later)
-  })
+  else{
+    console.log("There are commandline parameters that can be entered alongside the node operation. They can be entered like this: node [filename] --from [date] --to [date] --index [uri] or node [filename] -f [date] -t [date] -i [uri]")
+    var date = new Date();
+    // Automatic creation of default dates
+    var currDate = date.getFullYear() + "-" + ('0' + String(date.getMonth()+1)).substr(-2) + "-" + ('0' + String(date.getDate())).substr(-2) + "T";
+    var midNight = currDate + "00:00:00.000Z"; // Append the current date with midnight as the time
+    var morning1 = currDate + "01:00:00.000Z"; // Append the current date with 1 in the morning as the time
+    function defaults(questionText, callback){ // Function to confirm if the default dates should be used
+      function analyzeAnswer(answer){
+        if(answer.toLowerCase().startsWith("y")){ // If the response entered begins with a 'y' when converted to lowercase
+          rlinterface.close();
+          callback(answer); // Parses the default dates into the JSON body and sends it to the "getpage" module
+        }
+        else if(answer.toLowerCase().startsWith("n")){ // If the response entered begins with an 'n' when converted to lowercase
+          dateRange(JSONrequest); // Passes the JSON body to the dateRange function for the user to input the dates to be used
+        }
+        else{
+          console.log("Unsure what you mean by " + answer + " please try again"); // Default response to input which doesn't match expected values
+          rlinterface.question(questionText, analyzeAnswer); // Retry the question
+        }
+      }
+      rlinterface.question(questionText, analyzeAnswer);
+    }
+    defaults("Would you like to use the default dates: " + midNight + " to " + morning1 + "? ", function(answer){ // Function to parse the defailt dates into the JSON body
+      rlinterface.close();
+      JSONtimerange.gte = Date.parse(midNight); // Parse the first default date into epoch milliseconds and store in the JSON body
+      JSONtimerange.lte = Date.parse(morning1); // Parse the second default date into epoch milliseconds and store in the JSON body
+      page.getPage(undefined, JSONrequest); // Send the altered JSON body to the "getPage" module (note: the first parameter is set to undefined to ensure that the JSON body is not mistaken
+        // for the scroll id that will be provided later)
+    })
+  }
 }
 var counter = 0;
 function dateRange(JSONrequest){ // Function to allow the user to enter a date range to search with
