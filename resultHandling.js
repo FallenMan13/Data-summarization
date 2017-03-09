@@ -3,13 +3,14 @@ const page = require("./getPage");
 const summary = require("./dataSummary");
 const index = require("./indexData");
 var resArr = []; // Array to hold the response from the "getPage" module requests
+var collected = 0;
 module.exports.handleResults = function handleSearchResults(error, response, body){ // Function to push data collected from the request into an array
   if(error || response.statusCode != 200){ // If an error was encountered, or if the response code recieved was not 200 OK
     console.log("Got an error: ", JSON.stringify(body, null, 2)); // Stringify the body of the response and output it to the console
     return;
   }
   var res = body.hits.hits;
-  console.log("Got " + res.length + " results");
+  console.log("No. of results: " + (collected += res.length) + " / " + body.hits.total)
   res.forEach(function(re){
     if(re._source.label != undefined){ // Only push data to the array if the label is not undefined i.e only push data which exists to the array
       resArr.push({
