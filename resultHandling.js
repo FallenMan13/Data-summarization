@@ -10,8 +10,7 @@ module.exports.handleResults = function handleSearchResults(error, response, bod
     return;
   }
   var res = body.hits.hits;
-  //console.log("Got " + (collected += res.length) + " results of " + body.hits.total);
-  console.log((collected += res.length) + " / " + body.hits.total/* + "\n"*/)
+  console.log("No. of results: " + (collected += res.length) + " / " + body.hits.total)
   res.forEach(function(re){
     if(re._source.label != undefined){ // Only push data to the array if the label is not undefined i.e only push data which exists to the array
       resArr.push({
