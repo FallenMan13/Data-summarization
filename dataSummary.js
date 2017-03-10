@@ -4,6 +4,7 @@ module.exports.summarizeData = function summarizeData(initArr, sumArr){ // Funct
   var junk = []; // Array for unnecessary duplicate data
   var count = 0; // Counter for while loops
   var time = []; // Array to hold all elapsed_time values to perform Math.max/min operations on
+  console.log("Preparing to summarize data");
   while(count <= initArr.length){ // A while loop will help to ensure that the resulting array has looped through all of the data present in the initial array of data, rather than ending prematurely
     for(var i = 0, j = 1; i < initArr.length, j < initArr.length; j++){
       var Arr1 = initArr[i]; // Establish a static array pointer
@@ -64,6 +65,7 @@ module.exports.summarizeData = function summarizeData(initArr, sumArr){ // Funct
     }
     count++;
   }
+  console.log("Data summary complete");
   return sumArr; // Return the summary array back to the "resultHandling" module with all duplicate data removed leaving only the summarized data
 }
 
