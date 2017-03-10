@@ -4,22 +4,22 @@ const page = require("./getPage");
 const summary = require("./dataSummary");
 const index = require("./indexData");
 var resArr = []; // Array to hold the response from the "getPage" module requests
-var currpos = 0;
+var currbar = null; // Create progress bar variable to be set on first module call
 module.exports.handleResults = function handleSearchResults(error, response, body){ // Function to push data collected from the request into an array
   if(error || response.statusCode != 200){ // If an error was encountered, or if the response code recieved was not 200 OK
     console.log("Got an error: ", JSON.stringify(body, null, 2)); // Stringify the body of the response and output it to the console
     return;
   }
   var res = body.hits.hits;
-  var bar = new ProgressBar('  Retrieving [:bar] retrived: :current | total: ' + body.hits.total + ' | % complete: :percent | time remaining: :etas', {
-      complete: '#'
-    , incomplete: '-'
-    , width: 20
-    , total: body.hits.total
-  });
-  bar.curr = currpos;
+  if(!currbar){ // if the progress bar does not exist yet i.e. currbar is still null
+    currbar = new ProgressBar('  Retrieving [:bar] retrieved: :current | total: :total | % complete: :percent | time remaining: :etas', { // Create a new progress bar with the following options
+        complete: '#'
+      , incomplete: '-'
+      , width: 20
+      , total: body.hits.total
+    });
+  }
   res.forEach(function(re){
-    bar.tick()
     if(re._source.label != undefined){ // Only push data to the array if the label is not undefined i.e only push data which exists to the array
       resArr.push({
         "label" : re._source.label,
@@ -28,7 +28,16 @@ module.exports.handleResults = function handleSearchResults(error, response, bod
       });
     }
   });
-  currpos = bar.curr;
+  if(currbar.curr != body.hits.total){ // If the current index of the progress bar is less than the total number of records to retrieve
+    if(currbar.curr >= body.hits.total - 1000){ // If the current index of the progress bar is within 1000 of the number of records to retrieve
+      currbar.tick(body.hits.total - currbar.curr) // Tick using the difference between the total number of results and the current index of the progress bar
+    }
+    else{
+        currbar.tick(1000); // Otherwise tick with 1000
+    }
+  }
+  else if(currbar.curr === body.hits.total){ // If the current index of the progress bar is exactly equal to the total number of results to retrieve
+  } // Do nothing and move on to the final else
   if(res.length != 0){ // If there are still more pages to retrieve
     page.getPage(body._scroll_id); // Call the "getPage" module again with the scroll id as a parameter
   }
