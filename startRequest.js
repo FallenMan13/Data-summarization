@@ -14,7 +14,7 @@ module.exports.beginRequest = function beginRequest(JSONrequest){ // Function to
       .option('-t, --to [date]', 'End at entered date')
       .option('-i, --index [uri]', 'Index at specified uri')
       .parse(process.argv);
-  if(process.argv.length >= 6 && (isNaN(program.from) === false || isNaN(program.to) === false )){
+  if(process.argv.length >= 6 && (isNaN(Date.parse(program.from)) === false || isNaN(Date.parse(program.to)) === false )){
       console.log("You selected the date range of: ");
       if(program.from) console.log("From " + program.from);
       if(program.to) console.log("To " + program.to);
@@ -32,7 +32,7 @@ module.exports.beginRequest = function beginRequest(JSONrequest){ // Function to
   }
   else{
     program.outputHelp();
-    if((!program.from || isNaN(program.from) === true) || (!program.to || isNaN(program.to) === true)){
+    if((!program.from || isNaN(Date.parse(program.from)) === true) || (!program.to || isNaN(Date.parse(program.to)) === true)){
       console.log("In order to begin searching for data using the command line parameters, both the start and end date must be specified and must be numbers")
     }
     var date = new Date();
