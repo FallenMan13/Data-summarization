@@ -3,15 +3,16 @@ var request = require("request");
 const read  = require("readline");
 const config = require("./config");
 const created = require("./createdDate");
+const rlindexuri = read.createInterface({ // Interface to allow the user to input a uri for indexing to
+  input: process.stdin,
+  output: process.stdout
+})
 module.exports.indexData = function indexData(data){
   if(process.argv[7] != undefined){
+    rlindexuri.close();
     indexRequest(process.argv[7], data)
   }
   else{
-    const rlindexuri = read.createInterface({ // Interface to allow the user to input a uri for indexing to
-      input: process.stdin,
-      output: process.stdout
-    })
     function index(questionText, callback){ // Function to allow the user to input the desired uri to index the data to
       function analyzeAnswer(answer){
         Uri = config["base_uri"] + answer;
@@ -38,10 +39,6 @@ module.exports.indexData = function indexData(data){
 }
 
 function indexRequest(uri, data){
-  if(data.length === 0){
-    console.log("Index operation failed, no data to send");
-  }
-  else{
     for(var i = 0; i < data.length; i++){ // For loop to index the data individually i.e. each entry in the array will be indexed on its own to allow for easier viewing in kibana
       console.log("Preparing to index data");
       config.defaultRequest.uri = uri;
@@ -56,5 +53,4 @@ function indexRequest(uri, data){
       });
     }
     console.log("Indexing complete");
-  }
 }
