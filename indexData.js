@@ -3,16 +3,15 @@ var request = require("request");
 const read  = require("readline");
 const config = require("./config");
 const created = require("./createdDate");
-const rlindexuri = read.createInterface({ // Interface to allow the user to input a uri for indexing to
-  input: process.stdin,
-  output: process.stdout
-})
 module.exports.indexData = function indexData(data){
   if(process.argv[7] != undefined){
-    rlindexuri.close();
     indexRequest(process.argv[7], data)
   }
   else{
+    const rlindexuri = read.createInterface({ // Interface to allow the user to input a uri for indexing to
+      input: process.stdin,
+      output: process.stdout
+    })
     function index(questionText, callback){ // Function to allow the user to input the desired uri to index the data to
       function analyzeAnswer(answer){
         Uri = config["base_uri"] + answer;
@@ -53,4 +52,5 @@ function indexRequest(uri, data){
       });
     }
     console.log("Indexing complete");
+    return;
 }
