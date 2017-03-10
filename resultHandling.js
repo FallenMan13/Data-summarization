@@ -11,8 +11,8 @@ module.exports.handleResults = function handleSearchResults(error, response, bod
     return;
   }
   var res = body.hits.hits;
-  var bar = new ProgressBar('  Retrieving [:bar] retrived: :current | total: ' + body.hits.total + ' | % complete: :percent', {
-      complete: '='
+  var bar = new ProgressBar('  Retrieving [:bar] retrived: :current | total: ' + body.hits.total + ' | % complete: :percent | time remaining: :etas', {
+      complete: '#'
     , incomplete: '-'
     , width: 20
     , total: body.hits.total
