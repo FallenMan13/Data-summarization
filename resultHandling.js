@@ -42,10 +42,16 @@ module.exports.handleResults = function handleSearchResults(error, response, bod
     page.getPage(body._scroll_id); // Call the "getPage" module again with the scroll id as a parameter
   }
   else{ // Otherwise if there are no more pages to retrieve
-    console.log("Data collection complete");
-    var groupedArr = [];
-    summary.summarizeData(resArr, groupedArr); // Send the initial array and the summary array to the "dataSummary" module to summarize and store the data from the initial array
-    console.log("Total records: " + groupedArr.length);
-    index.indexData(groupedArr); // Send the array of summary data to the "indexData" module to attempt an index operation
+    if(resArr.length > 0){
+      console.log("Data collection complete");
+      var groupedArr = [];
+      summary.summarizeData(resArr, groupedArr); // Send the initial array and the summary array to the "dataSummary" module to summarize and store the data from the initial array
+      console.log("Total records: " + groupedArr.length);
+      index.indexData(groupedArr); // Send the array of summary data to the "indexData" module to attempt an index operation
+    }
+    else{
+      console.log("Data collection failed, no data could be found between the specified dates. Please try again.");
+      return;
+    }
   }
 }

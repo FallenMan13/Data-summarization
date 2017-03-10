@@ -8,16 +8,13 @@ const rlinterface = read.createInterface({ // Interface to allow the user to eit
 });
 module.exports.beginRequest = function beginRequest(JSONrequest){ // Function to allow the user to decide to use the default dates or enter their own
   var JSONtimerange = JSONrequest.query.bool.must[1].range["@timestamp"];
-
   program
       .version('0.0.1')
       .option('-f, --from [date]', 'Start from entered date')
       .option('-t, --to [date]', 'End at entered date')
       .option('-i, --index [uri]', 'Index at specified uri')
       .parse(process.argv);
-
   if(process.argv.length > 2){
-
       console.log("You selected the date range of: ");
       if(program.from) console.log("From " + program.from);
       if(program.to) console.log("To " + program.to);
@@ -25,12 +22,11 @@ module.exports.beginRequest = function beginRequest(JSONrequest){ // Function to
       if(program.index) console.log("Uri: " + program.index);
       JSONtimerange.gte = Date.parse(program.from);
       JSONtimerange.lte = Date.parse(program.to);
+      rlinterface.close();
       page.getPage(undefined, JSONrequest);
   }
   else{
-
     program.outputHelp();
-
     var date = new Date();
     // Automatic creation of default dates
     var currDate = date.getFullYear() + "-" + ('0' + String(date.getMonth()+1)).substr(-2) + "-" + ('0' + String(date.getDate())).substr(-2) + "T";
