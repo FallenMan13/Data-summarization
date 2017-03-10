@@ -14,12 +14,17 @@ module.exports.beginRequest = function beginRequest(JSONrequest){ // Function to
       .option('-t, --to [date]', 'End at entered date')
       .option('-i, --index [uri]', 'Index at specified uri')
       .parse(process.argv);
-  if(process.argv.length > 2){
+  if(process.argv.length >= 6 && (isNaN(program.from) === false || isNaN(program.to) === false )){
       console.log("You selected the date range of: ");
       if(program.from) console.log("From " + program.from);
       if(program.to) console.log("To " + program.to);
-      console.log("with an index uri of: ");
-      if(program.index) console.log("Uri: " + program.index);
+      if(!program.index){
+        console.log("No index uri was selected, you will be prompted to enter this at a later stage");
+      }
+      else if(program.index){
+        console.log("With an index uri of: ")
+        console.log("Uri: " + program.index);
+      }
       JSONtimerange.gte = Date.parse(program.from);
       JSONtimerange.lte = Date.parse(program.to);
       rlinterface.close();
@@ -27,6 +32,9 @@ module.exports.beginRequest = function beginRequest(JSONrequest){ // Function to
   }
   else{
     program.outputHelp();
+    if((!program.from || isNaN(program.from) === true) || (!program.to || isNaN(program.to) === true)){
+      console.log("In order to begin searching for data using the command line parameters, both the start and end date must be specified and must be numbers")
+    }
     var date = new Date();
     // Automatic creation of default dates
     var currDate = date.getFullYear() + "-" + ('0' + String(date.getMonth()+1)).substr(-2) + "-" + ('0' + String(date.getDate())).substr(-2) + "T";
