@@ -51,14 +51,6 @@ var searchRequestBody =
     "excludes": []
   },
   "aggs": {
-    "2": {
-      "date_histogram": {
-        "field": "@timestamp",
-        "interval": "30s",
-        "time_zone": "Europe/London",
-        "min_doc_count": 1
-      }
-    }
   },
   "stored_fields": [
     "*"
