@@ -35,7 +35,6 @@ module.exports.beginRequest = function beginRequest(JSONrequest){ // Function to
       }
       JSONtimerange.gte = Date.parse(program.from);
       JSONtimerange.lte = Date.parse(program.to);
-      JSONrequest.size = program.pages;
       rlinterface.close();
       page.getPage(undefined, JSONrequest);
   }
