@@ -12,21 +12,30 @@ module.exports.beginRequest = function beginRequest(JSONrequest){ // Function to
       .version('0.0.1')
       .option('-f, --from [date]', 'Start from entered date')
       .option('-t, --to [date]', 'End at entered date')
+      .option('-s, --source [uri]', 'Retrieve data from specified uri')
       .option('-i, --index [uri]', 'Index at specified uri')
       .parse(process.argv);
   if(process.argv.length >= 6 && (isNaN(Date.parse(program.from)) === false || isNaN(Date.parse(program.to)) === false )){
       console.log("You selected the date range of: ");
       if(program.from) console.log("From " + program.from);
       if(program.to) console.log("To " + program.to);
+      if(!program.source){
+        console.log("No source uri was selected, you will be prompted to enter this at a later stage");
+      }
+      else if(program.source){
+        console.log("With a source uri of: ");
+        console.log("Source uri: " + program.source);
+      }
       if(!program.index){
-        console.log("No index uri was selected, you will be prompted to enter this at a later stage");
+        console.log("No index uri was selected, you will be prompted to enter this at a later stage\n");
       }
       else if(program.index){
         console.log("With an index uri of: ")
-        console.log("Uri: " + program.index);
+        console.log("Index uri: " + program.index + "\n");
       }
       JSONtimerange.gte = Date.parse(program.from);
       JSONtimerange.lte = Date.parse(program.to);
+      JSONrequest.size = program.pages;
       rlinterface.close();
       page.getPage(undefined, JSONrequest);
   }

@@ -5,6 +5,9 @@ const config = require("./config");
 const handle = require("./resultHandling");
 module.exports.getPage = function getPage(scrollId, JSONrequest){ // Function to send requests for the data between the date range specified earlier
   if(scrollId === undefined){ // If the first page has not been retrieved yet
+    if(process.argv[9] != undefined){
+      sendData(process.argv[9]);
+    }
     const rluri = read.createInterface({
       input: process.stdin,
       output: process.stdout
