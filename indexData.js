@@ -4,8 +4,8 @@ const read  = require("readline");
 const config = require("./config");
 const created = require("./createdDate");
 module.exports.indexData = function indexData(data){
-  if(process.argv[9] != undefined){ // If the uri to index the data to was provided as a command line parameter
-    indexRequest(process.argv[9], data) // Call the indexRequest function with the supplied uri and the summarized data
+  if(process.argv[9] != undefined){
+    indexRequest(process.argv[9], data)
   }
   else{
     const rlindexuri = read.createInterface({ // Interface to allow the user to input a uri for indexing to
