@@ -7,7 +7,7 @@ const rlinterface = read.createInterface({ // Interface to allow the user to eit
   output: process.stdout
 });
 module.exports.beginRequest = function beginRequest(JSONrequest){ // Function to allow the user to decide to use the default dates or enter their own
-  var JSONtimerange = JSONrequest.query.bool.must[1].range["@timestamp"];
+var JSONtimerange = JSONrequest.query.bool.must[1].range["@timestamp"];
   program
       .version('0.0.1')
       .option('-f, --from [date]', 'Start from entered date')
@@ -36,7 +36,7 @@ module.exports.beginRequest = function beginRequest(JSONrequest){ // Function to
       JSONtimerange.gte = Date.parse(program.from);
       JSONtimerange.lte = Date.parse(program.to);
       rlinterface.close();
-      page.getPage(undefined, JSONrequest);
+      page.getPage(JSONrequest);
   }
   else{
     program.outputHelp();
@@ -68,14 +68,13 @@ module.exports.beginRequest = function beginRequest(JSONrequest){ // Function to
       rlinterface.close();
       JSONtimerange.gte = Date.parse(midNight); // Parse the first default date into epoch milliseconds and store in the JSON body
       JSONtimerange.lte = Date.parse(morning1); // Parse the second default date into epoch milliseconds and store in the JSON body
-      page.getPage(undefined, JSONrequest); // Send the altered JSON body to the "getPage" module (note: the first parameter is set to undefined to ensure that the JSON body is not mistaken
-        // for the scroll id that will be provided later)
+      page.getPage(JSONrequest); // Send the altered JSON body to the "getPage" module
     })
   }
 }
 var counter = 0;
 function dateRange(JSONrequest){ // Function to allow the user to enter a date range to search with
-  var JSONtimerange = JSONrequest.query.bool.must[1].range["@timestamp"];
+var JSONtimerange = JSONrequest.query.bool.must[1].range["@timestamp"];
   var qstntxt = ["Please enter the first date in the format 'yyyy-mm-ddThh:mm:ss.mmmZ' ", "Please enter the second date in the same format "]; // Array of question text
   function dates(questionText, callback){ // Function to allow the user to input 2 dates with confirmation
     function analyzeAnswer(answer){
@@ -103,8 +102,7 @@ function dateRange(JSONrequest){ // Function to allow the user to enter a date r
     else if(counter === 1){ // If the second question has been asked
       rlinterface.close();
       JSONtimerange.lte = Date.parse(answer); // Parse the entered date into epoch milliseconds and store in the JSON body as the ending date
-      page.getPage(undefined, JSONrequest); // Send the altered JSON body to the "getPage" module (note: the first parameter is set to undefined to ensure that the JSON body is not mistaken
-      // for the scroll id that will be provided later)
+      page.getPage(JSONrequest); // Send the altered JSON body to the "getPage" module
     }
   })
 }
