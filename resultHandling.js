@@ -32,7 +32,7 @@ module.exports.handleResults = function handleSearchResults(error, response, bod
   });
   if(resArr.length > 0){ // If data is present within the array
     console.log("\nData collection complete");
-    console.log("Total records: " + resArr.length)//groupedArr.length);
+    console.log("Total records: " + resArr.length)
     index.indexData(resArr);
   }
   else{ // If there was no data pushed to the array
