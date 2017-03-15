@@ -20,7 +20,7 @@ module.exports.getPage = function getPage(JSONrequest){ // Function to send requ
         }
         else if(answer.toLowerCase().startsWith("n")){
           rluri.question("Please enter the uri you would like to retrieve data from ", function(uri){
-            sendData(config["base_uri"] + uri);
+            sendData(uri);
           })
         }
       }
