@@ -15,12 +15,12 @@ var JSONtimerange = JSONrequest.query.bool.must[1].range["@timestamp"];
       .option('-s, --source [uri]', 'Retrieve data from specified uri')
       .option('-i, --index [uri]', 'Index at specified uri')
       .parse(process.argv);
-  if(process.argv.length >= 6 && (isNaN(Date.parse(program.from)) === false || isNaN(Date.parse(program.to)) === false )){
+  if(process.argv.length >= 6 && (isNaN(Date.parse(program.from)) === false && isNaN(Date.parse(program.to)) === false)){
       console.log("You selected the date range of: ");
       if(program.from) console.log("From " + program.from);
       if(program.to) console.log("To " + program.to);
       if(!program.source){
-        console.log("No source uri was selected, you will be prompted to enter this at a later stage");
+        console.log("No source uri was selected, you will be prompted to enter this shortly");
       }
       else if(program.source){
         console.log("With a source uri of: ");
@@ -78,18 +78,24 @@ var JSONtimerange = JSONrequest.query.bool.must[1].range["@timestamp"];
   var qstntxt = ["Please enter the first date in the format 'yyyy-mm-ddThh:mm:ss.mmmZ' ", "Please enter the second date in the same format "]; // Array of question text
   function dates(questionText, callback){ // Function to allow the user to input 2 dates with confirmation
     function analyzeAnswer(answer){
-      rlinterface.question("Is this date correct? " + answer + " ", function(confirm){
-        if(confirm.toLowerCase().startsWith("y")){ // If the response entered begins with a 'y' when converted to lowercase
-          callback(answer); // Parses the entered date into the JSON body
-        }
-        else if(confirm.toLowerCase().startsWith("n")){ // If the response entered begins with an 'n' when converted to lowercase
-          dateRange(JSONrequest); // Retries the current date entry
-        }
-        else{
-          console.log("Unsure what you mean by " + confirm + " please try again"); // Default response to input which doesn't match expected values
-          rlinterface.question(qstntxt[counter], analyzeAnswer); // Retry the current question
-        }
-      })
+      if(IsNaN(Date.parse(answer)) === true){
+        console.log("The entered date is invalid, please try again");
+        dateRange(JSONrequest);
+      }
+      else{
+        rlinterface.question("Is this date correct? " + answer + " ", function(confirm){
+          if(confirm.toLowerCase().startsWith("y")){ // If the response entered begins with a 'y' when converted to lowercase
+            callback(answer); // Parses the entered date into the JSON body
+          }
+          else if(confirm.toLowerCase().startsWith("n")){ // If the response entered begins with an 'n' when converted to lowercase
+            dateRange(JSONrequest); // Retries the current date entry
+          }
+          else{
+            console.log("Unsure what you mean by " + confirm + " please try again"); // Default response to input which doesn't match expected values
+            rlinterface.question(qstntxt[counter], analyzeAnswer); // Retry the current question
+          }
+        })
+      }
     }
     rlinterface.question(qstntxt[counter], analyzeAnswer);
   }
