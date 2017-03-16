@@ -1,3 +1,4 @@
+// Completely redundant now thanks to the use of aggregation
 module.exports.summarizeData = function summarizeData(initArr, sumArr){ // Function to summarize the collected data and remove any duplicates which may arise
   var total_time = 0;
   var total_count = 0;
