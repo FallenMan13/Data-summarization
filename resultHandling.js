@@ -1,6 +1,5 @@
 // Required modules
-var ProgressBar = require("progress");
-var fs = require("fs");
+//var ProgressBar = require("progress");
 const page = require("./getPage");
 const summary = require("./dataSummary");
 const index = require("./indexData");

@@ -37,20 +37,13 @@ module.exports.getPage = function getPage(JSONrequest){ // Function to send requ
     JSONrequest.aggs = {
       "data_labels": {
         "terms": {
-          "field": "label.keyword",
+          "field": "summary.label.keyword",
           "size": 100
         },
         "aggs": {
           "data_stats": {
             "stats": {
-              "field": "elapsed_time"
-            }
-          }
-        },
-        "aggs": {
-          "unique_data_count": {
-            "cardinality": {
-              "field": "label.keyword"
+              "field": "summary.elapsed_time"
             }
           }
         }
