@@ -18,7 +18,7 @@ request({
     console.log(error); 
   }
   else if(response.statusCode != 200){
-    console.log(JSON.stringify(body, null, 2); 
+    console.log(JSON.stringify(body, null, 2)); 
   }
   else{
     console.log(body);              
