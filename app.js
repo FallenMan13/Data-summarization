@@ -16,8 +16,10 @@ request({
 }, function(error, response, body){
   if(error || response.statusCode != 200){
     console.log(JSON.stringify(body, null, 2));
+    return;
   }
   else{
     console.log(JSON.stringify(body, null, 2));
+    return;
   }
 })
