@@ -10,16 +10,18 @@ app.listen(3000, function(){
   console.log("Example app listening on port 3000!")
 })
 
-request({
-  method: "GET",
-  uri: "http://localhost:3000/"
-}, function(error, response, body){
-  if(error || response.statusCode != 200){
-    console.log(JSON.stringify(body, null, 2));
-    res.end();
-  }
-  else{
-    console.log(JSON.stringify(body, null, 2));
-    res.end();
-  }
-})
+function getResponse(res){
+  request({
+    method: "GET",
+    uri: "http://localhost:3000/"
+  }, function(error, response, body){
+    if(error || response.statusCode != 200){
+      console.log(JSON.stringify(body, null, 2));
+      res.end();
+    }
+    else{
+      console.log(JSON.stringify(body, null, 2));
+      res.end();
+    }
+  })
+}
