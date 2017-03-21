@@ -40,7 +40,11 @@
   }
   </style>
 </head>
-<form>
+<form method="post">
+  <div>
+    <label for="source">Source URI:</label>
+    <input type="text" id="source" name="source_uri">
+  </div>
   <div>
     <label for="date1">Start Date:</label>
     <input type="date" id="date1">
@@ -48,10 +52,6 @@
   <div>
     <label for="date2">End Date:</label>
     <input type="date" id="date2">
-  </div>
-  <div>
-    <label for="source">Source URI:</label>
-    <input type="text" id="source" name="source_uri">
   </div>
   <div>
     <label for="index">Index URI:</label>
