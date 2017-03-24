@@ -5,7 +5,7 @@ const jmeter = require("./JmeterDataSummary");
 const index = require("./indexData");
 var app = express();
 
-app.set('port', (process.env.PORT || 5000));
+app.set("port", (process.env.PORT || 5000));
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended: false}));
@@ -20,27 +20,27 @@ app.get("/", function(request, response){
   var start = year_month + "01T00:00";
   var end = year_month + currdate + "T23:59";
   var defaults = {source_uri: "http://10.156.24.35:5601/elasticsearch/jmeter-*", start_date: start, end_date: end, index_uri: "http://10.156.24.35:5601/elasticsearch/perfstats-2017.03.23/summary/", summary_data: "Collected data will be placed here"};
-  response.render('pages/index', defaults);
+  response.render("pages/index", defaults);
 });
 
 app.post("/", function(request, response){
   var outcome = Object.assign(request.body);
-  if(config["summary_data"] === undefined){
-    outcome["summary_data"] = "Collected data will be placed here";
-    config["start_date"] = request.body["start_date"];
-    config["end_date"] = request.body["end_date"];
-    config["web_source_uri"] = request.body["source_uri"];
-    config["web_index_uri"] = request.body["index_uri"];
-    jmeter.Start();
-    setTimeout(function(){outcome["summary_data"] = JSON.stringify(config["summary_data"], null, 2);
-    response.render('pages/index', outcome)}, 1000);
-  }
-  else{
-    outcome["summary_data"] = JSON.stringify(config["summary_data"], null, 2);
-    index.indexData(config["summary_data"]);
-    response.render('pages/index', outcome);
-  }
+  outcome["summary_data"] = "Collected data will be placed here";
+  config["start_date"] = request.body["start_date"];
+  config["end_date"] = request.body["end_date"];
+  config["web_source_uri"] = request.body["source_uri"];
+  config["web_index_uri"] = request.body["index_uri"];
+  jmeter.Start();
+  setTimeout(function(){outcome["summary_data"] = JSON.stringify({Total_num_of_docs: config["summary_data"].length}, null, 2) + JSON.stringify(config["summary_data"], null, 2);
+  response.render("pages/index", outcome)}, 1000);
 });
+
+app.post("/index", function(request, response){
+  var data = Object.assign(request.body);
+  data["summary_data"] = JSON.stringify({Total_num_of_docs: config["summary_data"].length}, null, 2) + JSON.stringify(config["summary_data"], null, 2);
+  index.indexData(config["summary_data"]);
+  response.render("pages/index", data);
+})
 
 app.listen(app.get("port"), function(){
   console.log("Node app is running on port", app.get("port"));

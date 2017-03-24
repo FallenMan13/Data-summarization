@@ -48,7 +48,7 @@
     }
   </style>
 </head>
-<form method="post">
+<form action="/" method="post">
   <div>
     <label for="source">Source URI:</label>
     <input type="url" id="source" name="source_uri" value="<%=source_uri%>" autofocus="true">
@@ -73,7 +73,7 @@
     <textarea cols="50" id="summary_data" disabled="true" wrap="soft"><%=summary_data%></textarea>
   </div>
   <div class="button">
-    <button type="submit">Index Summarized Data</button>
+    <button type="submit" formaction="/index">Index Summarized Data</button>
   </div>
 </form>
 </html>
