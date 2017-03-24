@@ -4,8 +4,11 @@ const read  = require("readline");
 const config = require("./config");
 const created = require("./createdDate");
 module.exports.indexData = function indexData(data){
-  if(process.argv[9] != undefined){ // If the uri to index the data to was provided as a command line parameter
-    indexRequest(process.argv[9], data) // Call the indexRequest function with the supplied uri and the summarized data
+  if(config["index_uri"] != undefined){
+    indexRequest(config["index_uri"], data);
+  }
+  else if(config["web_index_uri"] != undefined){
+    indexRequest(config["web_index_uri"], data);
   }
   else{
     const rlindexuri = read.createInterface({ // Interface to allow the user to input a uri for indexing to
@@ -38,19 +41,19 @@ module.exports.indexData = function indexData(data){
 }
 
 function indexRequest(uri, data){
-    for(var i = 0; i < data.length; i++){ // For loop to index the data individually i.e. each entry in the array will be indexed on its own to allow for easier viewing in kibana
-      console.log("Preparing to index data");
-      config.defaultRequest.uri = uri;
-      config.defaultRequest.body = JSON.stringify(({"@timestamp" : created.createdOn(), "summary" : data[i]}), null, 2)
-      request(config.defaultRequest, function(error, response){
-        if(error){
-          console.log(error);
-        }
-        else if(response.statusCode >= 400){
-          console.log(JSON.stringify(response, null, 2)); // Stringify the response and log it to the console
-        }
-      });
-    }
-    console.log("Indexing complete");
-    return;
+  console.log("Preparing to index data");
+  for(var i = 0; i < data.length; i++){ // For loop to index the data individually i.e. each entry in the array will be indexed on its own to allow for easier viewing in kibana
+    config.defaultRequest.uri = uri;
+    config.defaultRequest.body = JSON.stringify(({"@timestamp" : created.createdOn(), "summary" : data[i]}), null, 2)
+    request(config.defaultRequest, function(error, response){
+      if(error){
+        console.log(error);
+      }
+      else if(response.statusCode >= 400){
+        console.log(JSON.stringify(response, null, 2)); // Stringify the response and log it to the console
+      }
+    });
+  }
+  console.log("Indexing complete");
+  return;
 }

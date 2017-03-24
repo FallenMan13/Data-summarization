@@ -4,7 +4,7 @@
   <style>
     form{
       margin: 0 auto;
-      width: 400px;
+      width: 700px;
       padding: 1em;
       border: 1px solid #CCC;
       border-radius: 1em;
@@ -22,9 +22,17 @@
 
     input{
       font: 1em sans-serif;
-      width: 300px;
+      width: 600px;
       box-sizing: border-box;
       border: 1px solid #999;
+    }
+
+    textarea{
+      font: 1em sans-serif;
+      width: 700px;
+      box-sizing: border-box;
+      border: 1px solid #999;
+      height: 20em;
     }
 
     input:focus{
@@ -40,25 +48,32 @@
     }
   </style>
 </head>
-<form>
+<form method="post">
   <div>
     <label for="source">Source URI:</label>
-    <input type="text" id="source" name="source_uri">
+    <input type="url" id="source" name="source_uri" value="<%=source_uri%>" autofocus="true">
   </div>
   <div>
     <label for="date1">Start Date:</label>
-    <input type="date" id="date1" name="start_date">
+    <input type="datetime-local" id="date1" name="start_date" value="<%=start_date%>">
   </div>
   <div>
     <label for="date2">End Date:</label>
-    <input type="date" id="date2" name="end_date">
+    <input type="datetime-local" id="date2" name="end_date" value="<%=end_date%>">
   </div>
   <div>
     <label for="index">Index URI:</label>
-    <input type="text" id="index" name="index_uri">
+    <input type="url" id="index" name="index_uri" value="<%=index_uri%>">
   </div>
   <div class="button">
-    <button type="submit">Request data</button>
+    <button type="submit">Request and Summarize Data</button>
+  </div>
+  <div>
+    <label for="summary_data">Summarized Data:</label>
+    <textarea cols="50" id="summary_data" disabled="true" wrap="soft"><%=summary_data%></textarea>
+  </div>
+  <div class="button">
+    <button type="submit">Index Summarized Data</button>
   </div>
 </form>
 </html>

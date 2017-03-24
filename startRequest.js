@@ -2,6 +2,7 @@
 const read  = require("readline");
 const program = require("commander");
 const page = require("./getPage");
+const config = require("./config")
 const rlinterface = read.createInterface({ // Interface to allow the user to either use the default dates, or enter their own
   input: process.stdin,
   output: process.stdout
@@ -9,34 +10,41 @@ const rlinterface = read.createInterface({ // Interface to allow the user to eit
 module.exports.beginRequest = function beginRequest(JSONrequest){ // Function to allow the user to decide to use the default dates or enter their own
 var JSONtimerange = JSONrequest.query.bool.must[1].range["@timestamp"];
   program
-      .version('0.0.1')
-      .option('-f, --from [date]', 'Start from entered date')
-      .option('-t, --to [date]', 'End at entered date')
-      .option('-s, --source [uri]', 'Retrieve data from specified uri')
-      .option('-i, --index [uri]', 'Index at specified uri')
-      .parse(process.argv);
+    .version('0.0.1')
+    .option('-f, --from [date]', 'Start from entered date')
+    .option('-t, --to [date]', 'End at entered date')
+    .option('-s, --source [uri]', 'Retrieve data from specified uri')
+    .option('-i, --index [uri]', 'Index at specified uri')
+    .parse(process.argv);
   if(process.argv.length >= 6 && (isNaN(Date.parse(program.from)) === false && isNaN(Date.parse(program.to)) === false)){
-      console.log("You selected the date range of: ");
-      if(program.from) console.log("From " + program.from);
-      if(program.to) console.log("To " + program.to);
-      if(!program.source){
-        console.log("No source uri was selected, you will be prompted to enter this shortly");
-      }
-      else if(program.source){
-        console.log("With a source uri of: ");
-        console.log("Source uri: " + program.source);
-      }
-      if(!program.index){
-        console.log("No index uri was selected, you will be prompted to enter this at a later stage\n");
-      }
-      else if(program.index){
-        console.log("With an index uri of: ")
-        console.log("Index uri: " + program.index + "\n");
-      }
-      JSONtimerange.gte = Date.parse(program.from);
-      JSONtimerange.lte = Date.parse(program.to);
-      rlinterface.close();
-      page.getPage(JSONrequest);
+    console.log("You selected the date range of: ");
+    if(program.from) console.log("From " + program.from);
+    if(program.to) console.log("To " + program.to);
+    if(!program.source){
+      console.log("No source uri was selected, you will be prompted to enter this shortly");
+    }
+    else if(program.source){
+      console.log("With a source uri of: ");
+      console.log("Source uri: " + program.source);
+      config["source_uri"] = program.source;
+    }
+    if(!program.index){
+      console.log("No index uri was selected, you will be prompted to enter this at a later stage\n");
+    }
+    else if(program.index){
+      console.log("With an index uri of: ")
+      console.log("Index uri: " + program.index + "\n");
+      config["index_uri"] = program.index;
+    }
+    JSONtimerange.gte = Date.parse(program.from);
+    JSONtimerange.lte = Date.parse(program.to);
+    rlinterface.close();
+    page.getPage(JSONrequest);
+  }
+  else if(config["start_date"] != undefined && config["end_date"] != undefined){
+    JSONtimerange.gte = Date.parse(config["start_date"]);
+    JSONtimerange.lte = Date.parse(config["end_date"]);
+    page.getPage(JSONrequest);
   }
   else{
     program.outputHelp();

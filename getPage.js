@@ -4,8 +4,11 @@ const read  = require("readline");
 const config = require("./config");
 const handle = require("./resultHandling");
 module.exports.getPage = function getPage(JSONrequest){ // Function to send requests for the data between the date range specified earlier
-  if(process.argv[7] != undefined){ // If a source uri has been supplied as a command line parameter
-    sendData(process.argv[7]); // Call the sendData function with the entered parameter as the uri
+  if(config["source_uri"] != undefined){
+    sendData(config["source_uri"]);
+  }
+  else if(config["web_source_uri"] != undefined){
+    sendData(config["web_source_uri"]);
   }
   else{
     const rluri = read.createInterface({
@@ -37,13 +40,13 @@ module.exports.getPage = function getPage(JSONrequest){ // Function to send requ
     JSONrequest.aggs = {
       "data_labels": {
         "terms": {
-          "field": "summary.label.keyword",
-          "size": 100
+          "field": "label.raw",
+          "size": 350
         },
         "aggs": {
           "data_stats": {
             "stats": {
-              "field": "summary.elapsed_time"
+              "field": "elapsed_time"
             }
           }
         }
